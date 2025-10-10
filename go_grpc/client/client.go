@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
+	"fmt"
 	"log"
-	"time"
+	"os"
+	"strings"
 
 	pb "github.com/jdk829355/learn_golang/go_grpc/helloworld_pb"
 	"google.golang.org/grpc"
@@ -27,22 +30,55 @@ func main() {
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
-	cc := pb.NewCalculatorClient(conn)
+
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+	}(conn)
+
+	gonggam := pb.NewGongGamClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
+	ctx := context.Background()
 
-	r, err := c.Sayhello(ctx, &pb.HelloRequest{Name: *name})
+	stream, err := gonggam.YesYes(ctx)
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	res, err := cc.Sum(ctx, &pb.SumRequest{A: 3, B: 4})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+
+	w := make(chan struct{})
+
+	go func() {
+		for {
+			reader := bufio.NewReader(os.Stdin)
+			var q string
+
+			fmt.Print("고민을 털어놓으세요: ")
+			q, err := reader.ReadString('\n')
+			q = strings.TrimSpace(q)
+			if err != nil {
+				log.Fatalf("%v", err)
+			}
+			err = stream.Send(&pb.GongGamRequest{Gomin: q})
+			if err != nil {
+				log.Fatalf("%v", err)
+			}
+			<-w
+		}
+	}()
+
+	for {
+		message, err := stream.Recv()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		if message.GetGonggam() == "<end>" {
+			fmt.Print("\n")
+			w <- struct{}{}
+		} else {
+			fmt.Print(message.GetGonggam())
+		}
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
-	log.Printf("Calculated: %d", res.GetResult())
 }

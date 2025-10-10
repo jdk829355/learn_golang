@@ -3,20 +3,21 @@ option go_package = "github.com/jdk829355/learn_golang/go_grpc/helloworld_pb";
 
 package helloworld;
 
+// 인사 서비스
 service Greeter {
     rpc Sayhello (HelloRequest) returns (HelloReply) {}
 }
-
-service Calculator {
-    rpc Sum (SumRequest) returns (SumResponse) {} 
-}
-
 message HelloRequest {
     string name = 1;
 }
 
 message HelloReply {
     string message = 1;
+}
+
+// 계산기 서비스
+service Calculator {
+    rpc Sum (SumRequest) returns (SumResponse) {} 
 }
 
 message SumRequest {
@@ -26,4 +27,17 @@ message SumRequest {
 
 message SumResponse {
     int64 result = 1;
+}
+
+// 공감 서비스
+service GongGam {
+    rpc YesYes (stream GongGamRequest) returns (stream GongGamResponse);
+}
+
+message GongGamRequest {
+    string gomin =1;
+}
+
+message GongGamResponse {
+    string gonggam = 1;
 }

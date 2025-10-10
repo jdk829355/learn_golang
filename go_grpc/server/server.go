@@ -1,68 +1,91 @@
-/*
- *
- * Copyright 2015 gRPC authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-// Package main implements a server for Greeter service.
 package main
 
 import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/jdk829355/learn_golang/go_grpc/helloworld_pb"
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
+
+	"google.golang.org/genai"
 )
 
 var (
 	port = flag.Int("port", 50051, "The server port")
 )
 
-// server is used to implement helloworld.GreeterServer.
-type GreeterServer struct {
-	pb.UnimplementedGreeterServer
+type GongGamServer struct {
+	pb.UnimplementedGongGamServer
 }
 
-// SayHello implements helloworld.GreeterServer
-func (s *GreeterServer) Sayhello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	log.Printf("Received: %v", in.GetName())
-	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+func CreateMessage(s string) pb.GongGamResponse {
+	return pb.GongGamResponse{Gonggam: s}
 }
 
-type CalculatorServer struct {
-	pb.UnimplementedCalculatorServer
-}
+func (s *GongGamServer) YesYes(stream pb.GongGam_YesYesServer) error {
+	apiKey := os.Getenv("GEMINI_API_KEY")
+	end := CreateMessage("<end>")
+	if apiKey == "" {
+		log.Fatal("GEMINI_API_KEY environment variable not set")
+	}
 
-func (s *CalculatorServer) Sum(ctx context.Context, in *pb.SumRequest) (*pb.SumResponse, error) {
-	log.Printf("Received: %d, %d", in.GetA(), in.GetB())
-	return &pb.SumResponse{Result: in.GetA() + in.GetB()}, nil
+	// Create a new Gemini client.
+	ctx := context.Background()
+	client, err := genai.NewClient(ctx, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for {
+		m, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		} else {
+			if err != nil {
+				return err
+			}
+			if m.GetGomin() == "bye" {
+				return nil
+			}
+			log.Printf("received: %s", m.GetGomin())
+			result := client.Models.GenerateContentStream(ctx, "gemini-2.5-flash", genai.Text("다음 문장에 공감하는 대답을 생성하여라. 최대한 따뜻한 말투로 감정적 공감을 할 것: "+m.GetGomin()), nil)
+
+			for chunk, _ := range result {
+				if len(chunk.Candidates) == 0 {
+					break
+				}
+				part := chunk.Candidates[0].Content.Parts[0]
+				messageToSend := CreateMessage(part.Text)
+				err := stream.Send(&messageToSend)
+				if err != nil {
+					return err
+				}
+			}
+			err := stream.Send(&end)
+			if err != nil {
+				return err
+			}
+		}
+	}
 }
 
 func main() {
 	flag.Parse()
+	_ = godotenv.Load()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
 	s := grpc.NewServer()
-	pb.RegisterGreeterServer(s, &GreeterServer{})
-	pb.RegisterCalculatorServer(s, &CalculatorServer{})
+
+	pb.RegisterGongGamServer(s, &GongGamServer{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

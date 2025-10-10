@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine
+FROM golang:1.25-alpine3.21
 
 RUN mkdir /app
 
@@ -6,7 +6,7 @@ ADD . /app
 
 WORKDIR /app
 
-COPY go.mod ./
+COPY . ./
 
 RUN go mod download 
 

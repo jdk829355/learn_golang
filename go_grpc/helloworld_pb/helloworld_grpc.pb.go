@@ -25,6 +25,8 @@ const (
 // GreeterClient is the client API for Greeter service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 인사 서비스
 type GreeterClient interface {
 	Sayhello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 }
@@ -50,6 +52,8 @@ func (c *greeterClient) Sayhello(ctx context.Context, in *HelloRequest, opts ...
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility.
+//
+// 인사 서비스
 type GreeterServer interface {
 	Sayhello(context.Context, *HelloRequest) (*HelloReply, error)
 	mustEmbedUnimplementedGreeterServer()
@@ -127,6 +131,8 @@ const (
 // CalculatorClient is the client API for Calculator service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 계산기 서비스
 type CalculatorClient interface {
 	Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error)
 }
@@ -152,6 +158,8 @@ func (c *calculatorClient) Sum(ctx context.Context, in *SumRequest, opts ...grpc
 // CalculatorServer is the server API for Calculator service.
 // All implementations must embed UnimplementedCalculatorServer
 // for forward compatibility.
+//
+// 계산기 서비스
 type CalculatorServer interface {
 	Sum(context.Context, *SumRequest) (*SumResponse, error)
 	mustEmbedUnimplementedCalculatorServer()
@@ -219,5 +227,105 @@ var Calculator_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
+	Metadata: "helloworld.proto",
+}
+
+const (
+	GongGam_YesYes_FullMethodName = "/helloworld.GongGam/YesYes"
+)
+
+// GongGamClient is the client API for GongGam service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 공감 서비스
+type GongGamClient interface {
+	YesYes(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[GongGamRequest, GongGamResponse], error)
+}
+
+type gongGamClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGongGamClient(cc grpc.ClientConnInterface) GongGamClient {
+	return &gongGamClient{cc}
+}
+
+func (c *gongGamClient) YesYes(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[GongGamRequest, GongGamResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &GongGam_ServiceDesc.Streams[0], GongGam_YesYes_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GongGamRequest, GongGamResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type GongGam_YesYesClient = grpc.BidiStreamingClient[GongGamRequest, GongGamResponse]
+
+// GongGamServer is the server API for GongGam service.
+// All implementations must embed UnimplementedGongGamServer
+// for forward compatibility.
+//
+// 공감 서비스
+type GongGamServer interface {
+	YesYes(grpc.BidiStreamingServer[GongGamRequest, GongGamResponse]) error
+	mustEmbedUnimplementedGongGamServer()
+}
+
+// UnimplementedGongGamServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGongGamServer struct{}
+
+func (UnimplementedGongGamServer) YesYes(grpc.BidiStreamingServer[GongGamRequest, GongGamResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method YesYes not implemented")
+}
+func (UnimplementedGongGamServer) mustEmbedUnimplementedGongGamServer() {}
+func (UnimplementedGongGamServer) testEmbeddedByValue()                 {}
+
+// UnsafeGongGamServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GongGamServer will
+// result in compilation errors.
+type UnsafeGongGamServer interface {
+	mustEmbedUnimplementedGongGamServer()
+}
+
+func RegisterGongGamServer(s grpc.ServiceRegistrar, srv GongGamServer) {
+	// If the following call pancis, it indicates UnimplementedGongGamServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GongGam_ServiceDesc, srv)
+}
+
+func _GongGam_YesYes_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GongGamServer).YesYes(&grpc.GenericServerStream[GongGamRequest, GongGamResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type GongGam_YesYesServer = grpc.BidiStreamingServer[GongGamRequest, GongGamResponse]
+
+// GongGam_ServiceDesc is the grpc.ServiceDesc for GongGam service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GongGam_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "helloworld.GongGam",
+	HandlerType: (*GongGamServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "YesYes",
+			Handler:       _GongGam_YesYes_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "helloworld.proto",
 }

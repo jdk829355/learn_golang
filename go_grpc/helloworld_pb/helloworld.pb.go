@@ -205,6 +205,94 @@ func (x *SumResponse) GetResult() int64 {
 	return 0
 }
 
+type GongGamRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Gomin         string                 `protobuf:"bytes,1,opt,name=gomin,proto3" json:"gomin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GongGamRequest) Reset() {
+	*x = GongGamRequest{}
+	mi := &file_helloworld_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GongGamRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GongGamRequest) ProtoMessage() {}
+
+func (x *GongGamRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_helloworld_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GongGamRequest.ProtoReflect.Descriptor instead.
+func (*GongGamRequest) Descriptor() ([]byte, []int) {
+	return file_helloworld_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GongGamRequest) GetGomin() string {
+	if x != nil {
+		return x.Gomin
+	}
+	return ""
+}
+
+type GongGamResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Gonggam       string                 `protobuf:"bytes,1,opt,name=gonggam,proto3" json:"gonggam,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GongGamResponse) Reset() {
+	*x = GongGamResponse{}
+	mi := &file_helloworld_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GongGamResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GongGamResponse) ProtoMessage() {}
+
+func (x *GongGamResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_helloworld_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GongGamResponse.ProtoReflect.Descriptor instead.
+func (*GongGamResponse) Descriptor() ([]byte, []int) {
+	return file_helloworld_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GongGamResponse) GetGonggam() string {
+	if x != nil {
+		return x.Gonggam
+	}
+	return ""
+}
+
 var File_helloworld_proto protoreflect.FileDescriptor
 
 const file_helloworld_proto_rawDesc = "" +
@@ -221,12 +309,18 @@ const file_helloworld_proto_rawDesc = "" +
 	"\x01a\x18\x01 \x01(\x03R\x01a\x12\f\n" +
 	"\x01b\x18\x02 \x01(\x03R\x01b\"%\n" +
 	"\vSumResponse\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\x03R\x06result2I\n" +
+	"\x06result\x18\x01 \x01(\x03R\x06result\"&\n" +
+	"\x0eGongGamRequest\x12\x14\n" +
+	"\x05gomin\x18\x01 \x01(\tR\x05gomin\"+\n" +
+	"\x0fGongGamResponse\x12\x18\n" +
+	"\agonggam\x18\x01 \x01(\tR\agonggam2I\n" +
 	"\aGreeter\x12>\n" +
 	"\bSayhello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x002F\n" +
 	"\n" +
 	"Calculator\x128\n" +
-	"\x03Sum\x12\x16.helloworld.SumRequest\x1a\x17.helloworld.SumResponse\"\x00B9Z7github.com/jdk829355/learn_golang/go_grpc/helloworld_pbb\x06proto3"
+	"\x03Sum\x12\x16.helloworld.SumRequest\x1a\x17.helloworld.SumResponse\"\x002P\n" +
+	"\aGongGam\x12E\n" +
+	"\x06YesYes\x12\x1a.helloworld.GongGamRequest\x1a\x1b.helloworld.GongGamResponse(\x010\x01B9Z7github.com/jdk829355/learn_golang/go_grpc/helloworld_pbb\x06proto3"
 
 var (
 	file_helloworld_proto_rawDescOnce sync.Once
@@ -240,20 +334,24 @@ func file_helloworld_proto_rawDescGZIP() []byte {
 	return file_helloworld_proto_rawDescData
 }
 
-var file_helloworld_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_helloworld_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_helloworld_proto_goTypes = []any{
-	(*HelloRequest)(nil), // 0: helloworld.HelloRequest
-	(*HelloReply)(nil),   // 1: helloworld.HelloReply
-	(*SumRequest)(nil),   // 2: helloworld.SumRequest
-	(*SumResponse)(nil),  // 3: helloworld.SumResponse
+	(*HelloRequest)(nil),    // 0: helloworld.HelloRequest
+	(*HelloReply)(nil),      // 1: helloworld.HelloReply
+	(*SumRequest)(nil),      // 2: helloworld.SumRequest
+	(*SumResponse)(nil),     // 3: helloworld.SumResponse
+	(*GongGamRequest)(nil),  // 4: helloworld.GongGamRequest
+	(*GongGamResponse)(nil), // 5: helloworld.GongGamResponse
 }
 var file_helloworld_proto_depIdxs = []int32{
 	0, // 0: helloworld.Greeter.Sayhello:input_type -> helloworld.HelloRequest
 	2, // 1: helloworld.Calculator.Sum:input_type -> helloworld.SumRequest
-	1, // 2: helloworld.Greeter.Sayhello:output_type -> helloworld.HelloReply
-	3, // 3: helloworld.Calculator.Sum:output_type -> helloworld.SumResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: helloworld.GongGam.YesYes:input_type -> helloworld.GongGamRequest
+	1, // 3: helloworld.Greeter.Sayhello:output_type -> helloworld.HelloReply
+	3, // 4: helloworld.Calculator.Sum:output_type -> helloworld.SumResponse
+	5, // 5: helloworld.GongGam.YesYes:output_type -> helloworld.GongGamResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -270,9 +368,9 @@ func file_helloworld_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_helloworld_proto_rawDesc), len(file_helloworld_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_helloworld_proto_goTypes,
 		DependencyIndexes: file_helloworld_proto_depIdxs,
