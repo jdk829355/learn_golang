@@ -1,0 +1,29 @@
+syntax = "proto3";
+option go_package = "github.com/jdk829355/learn_golang/go_grpc/helloworld_pb";
+
+package helloworld;
+
+service Greeter {
+    rpc Sayhello (HelloRequest) returns (HelloReply) {}
+}
+
+service Calculator {
+    rpc Sum (SumRequest) returns (SumResponse) {} 
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}
+
+message SumRequest {
+    int64 a = 1;
+    int64 b = 2;
+}
+
+message SumResponse {
+    int64 result = 1;
+}
